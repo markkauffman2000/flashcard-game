@@ -1,6 +1,14 @@
 (ns app.core)
 (require '[clojure.edn :as edn])
 
+(def sample-deck
+  [{:id 1 :question "Clojure is a Lisp. true/false" :answer true}
+   {:id 2 :question "Vectors are mutable. true/false" :answer false}
+   {:id 3 :question "(+ 1 2) equals 3. true/fasle" :answer true}]
+  )
+
+(defn initialize-deck [] ;; this is so we can read a file here later onn..
+  sample-deck)
 
 
 (defn process-node [input]
@@ -45,10 +53,11 @@
 
 
 (defn play-game []
-  (println "I have a number between 1 and 100. Guess it!")
-  (let [the-num (generate-num)]
+  (println "Initializing deck...!")
+  (println (initialize-deck))
+"""  (let [the-num (generate-num)]
     (game-loop the-num)
-    )
+    ) """
     "That's all folks!"
   )
 
