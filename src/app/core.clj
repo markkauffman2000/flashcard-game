@@ -7,8 +7,11 @@
    {:id 3 :question "(+ 1 2) equals 3. true/fasle" :answer true}]
   )
 
-(defn initialize-deck [] ;; this is so we can read a file here later onn..
-  sample-deck)
+;; load the deck and shuffle it.
+(defn initialize-deck [] ;; this is so we can read a file here later on..
+  (let [shuffled-deck (shuffle sample-deck)]
+   shuffled-deck)
+  )
 
 
 (defn process-node [input]
