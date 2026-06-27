@@ -1,10 +1,10 @@
-mkdir guessing-game
-cd guessing-game
+mkdir flashcard-game
+cd flashcard-game
 echo "{}" > deps.edn
 
 mkdir -p src/app
 
-[mbk@fedora-s-1vcpu-1gb-sfo2 guessing-game]$ cat src/app/core.clj 
+[mbk@fedora-s-1vcpu-1gb-sfo2 flashcard-game]$ cat src/app/core.clj 
                                                                     
 (ns app.core)
                                                                       
@@ -14,7 +14,7 @@ mkdir -p src/app
 
 (app.core/-main "live_signal")
 
-[mbk@fedora-s-1vcpu-1gb-sfo2 guessing-game]$
+[mbk@fedora-s-1vcpu-1gb-sfo2 flashcard-game]$
 
 cd /path/to/your/clojure-project 
 emacs -nw src/app/core.clj
