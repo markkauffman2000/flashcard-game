@@ -4,7 +4,8 @@
 (def sample-deck
   [{:id 1 :question "Clojure is a Lisp. true/false" :answer true}
    {:id 2 :question "Vectors are mutable. true/false" :answer false}
-   {:id 3 :question "(+ 1 2) equals 3. true/fasle" :answer true}]
+   {:id 3 :question "(+ 1 2) equals 3. true/false" :answer true}
+   {:id 4 :question "you have no quest. true/false" :answer true}]
   )
 
 ;; load the deck and shuffle it.
@@ -32,35 +33,19 @@
 (defn generate-num []
   (inc (rand-int 99)))
 
-(defn game-loop [target]
+(defn game-loop [deck]
   (flush)
-  (let [guess (get-user-number)]
-    (cond
-      (not (integer? guess ))
-      (do
-        (println "Invalid input. Enter a whole number.")
-        (recur target))
-
-      (== guess target)
-      (println "Correct! You win!!``")
-
-      :else
-     (do
-      (println "Guess" guess (if (< guess target) "To low!" "Too high!!"))
-      (recur target))
-    ) ;; cond
-
-   ) ;; let
-
-  ) ;; defn generate-num
+  ( doseq [card deck]
+   (println card))
+  ) ;; defn game-loop
 
 
 (defn play-game []
   (println "Initializing deck...!")
-  (println (initialize-deck))
-"""  (let [the-num (generate-num)]
-    (game-loop the-num)
-    ) """
+  (let [shuffled-deck  (initialize-deck)]
+    (game-loop shuffled-deck)
+    ) ;; end let
+
     "That's all folks!"
   )
 
