@@ -14,36 +14,35 @@
    shuffled-deck)
   )
 
-
-(defn process-node [input]
-  (str "processing node with input: " input))
-
-(defn get-user-number []
-  (println "Enter your integer guess between 1 and 100")
-  (let [input (read-line)
-    number (edn/read-string input)]
-  (if (integer? number)
-    number
-    (println "That wasn't a valid integer"))
-  ))
-
-
-
-;; Generate a number between 1 and 100.
-(defn generate-num []
-  (inc (rand-int 99)))
+(defn query-user [num-correct card]
+  (println card)
+  (+ 1 num-correct)
+  )
 
 (defn game-loop [deck]
   (flush)
-  ( doseq [card deck]
-   (println card))
-  ) ;; defn game-loop
+;;  (let num-correct 0
+;;    ( doseq [card deck]
+;;      (query-user card num-correct)
+;;     )
+;;    )
+;;    replacing the above with the following reduce. num-correct 0 is now just 0.
+
+;;  (reduce (fn [num-correct card]
+;;            (query-user num-correct card))
+;;          0
+;;          deck)
+;;   We can get even simpler and get rid of the anonymous function.
+    (reduce query-user 0 deck)
+
+) ;; defn game-loop
 
 
 (defn play-game []
   (println "Initializing deck...!")
-  (let [shuffled-deck  (initialize-deck)]
-    (game-loop shuffled-deck)
+  (let [shuffled-deck  (initialize-deck)
+        final-score (game-loop shuffled-deck)]
+    (println "Your final score is: " final-score)
     ) ;; end let
 
     "That's all folks!"
@@ -52,15 +51,13 @@
 (defn -main [& args]
   (case (count args)
     0 ( println (play-game))
-    1 ( println (process-node (first args)) )
     (println "wrong number of args")
    )
  )
 
 (comment
-  (app.core/-main "live_signal")
+  (app.core/-main "live_signal")  ;; should give wrong # of args...
 
   (app.core/-main)
 
-  (app.core/get-user-number)
   )
