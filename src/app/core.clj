@@ -21,18 +21,6 @@
 
 (defn game-loop [deck]
   (flush)
-;;  (let num-correct 0
-;;    ( doseq [card deck]
-;;      (query-user card num-correct)
-;;     )
-;;    )
-;;    replacing the above with the following reduce. num-correct 0 is now just 0.
-
-;;  (reduce (fn [num-correct card]
-;;            (query-user num-correct card))
-;;          0
-;;          deck)
-;;   We can get even simpler and get rid of the anonymous function.
     (reduce query-user 0 deck)
 
 ) ;; defn game-loop
