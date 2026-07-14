@@ -4,14 +4,27 @@
 
 ;; Notice how we've added a :type key, and separated the question text
 ;; from how it's presented to the user.
+;; load the deck and shuffle it.
+;;
 (def sample-deck
   [{:id 1 :type :tf :question "Clojure is a Lisp." :answer true}
    {:id 2 :type :tf :question "Vectors are mutable." :answer false}
    {:id 3 :type :tf :question "(+ 1 2) equals 3." :answer true}
-   ;; This multiple-choice card slots in perfectly now!
-   {:id 4 :type :mc :question "What is my favorite color?" :options "a: red / b: blue / c: yellow" :answer "a"}])
 
-;; load the deck and shuffle it.
+   {:id 4
+    :type :mc
+    :question "What is my favorite color?"
+    :options [["1" "red"] ["2" "blue"] ["3" "yellow"]]
+    :answer "1"}
+
+   {:id 5
+    :type :mc
+    :question "Which data structure is immutable in Clojure?"
+    :options [["A." "Vectors"] ["B." "Lists"] ["C." "Maps"] ["D." "All of them"]]
+    :answer "D."}
+])
+
+
 (defn initialize-deck [] ;; this is so we can read a file here later on..
   (let [shuffled-deck (shuffle sample-deck)]
    shuffled-deck)
@@ -21,41 +34,56 @@
 (defn display-card [card]
   (println "\n========================================")
   (println "Question:" (:question card))
-  ;; Use 'case' to change the presentation depending on the question type
   (case (:type card)
     :tf (println "[ True or False? ]")
-    :mc (println (:options card))))
+    ;; We pull out 'label' and 'text' directly from each pair
+    :mc (doseq [[label text] (:options card)]
+          (println (str "  " label " " text))
+          )
+    )
+  )
+
+(defn clean-label [label]
+  ;; Strips trailing periods/spaces and lowercases for safe comparison
+  (str/lower-case (str/replace label #"[.\s]" "")))
 
 ;; CONSIDERATION 2: Input helper checks the card type to know what to ask for
-(defn get-user-answer [card-type]
-  (loop []
-    (case card-type
-      :tf (print "Your answer (t/f): ")
-      :mc (print "Your answer (a/b/c): "))
-    (flush)
-    (let [input (str/lower-case (str/trim (read-line)))]
+(defn get-user-answer [card]
+  (let [card-type (:type card)]
+    (loop []
       (case card-type
-        ;; Validation loop for True/False
-        :tf (cond
-              (or (= input "t") (= input "true")) true
-              (or (= input "f") (= input "false")) false
-              :else (do (println "Invalid input. Please enter 't' or 'f'.") (recur)))
+        :tf (print "Your answer (t/f): ")
+        :mc (let [raw-labels (map first (:options card))
+                  prompt-str (str/join "/" raw-labels)]
+              (print (str "Your answer (" prompt-str "): "))))
+      (flush)
 
-        ;; Validation loop for Multiple Choice
-        :mc (if (contains? #{"a" "b" "c"} input)
-              input
-              (do (println "Invalid input. Please enter 'a', 'b', or 'c'.") (recur)))))))
+      (let [input (str/lower-case (str/trim (read-line)))]
+        (case card-type
+          :tf (cond
+                (or (= input "t") (= input "true")) true
+                (or (= input "f") (= input "false")) false
+                :else (do (println "Invalid input. Please enter 't' or 'f'.") (recur)))
+
+          :mc (let [valid-choices (set (map clean-label (map first (:options card))))]
+                (if (contains? valid-choices (clean-label input))
+                  input
+                  (do
+                    (println "Invalid input. Please choose a valid option.")
+                    (recur)))))
+        )
+      )
+    )
+  )
+
 
 (defn query-user [num-correct card]
-  ;; First, display the card text
   (display-card card)
-
-  ;; Next, grab the type-specific validated answer
-  (let [user-ans (get-user-answer (:type card))
+  (let [user-ans (get-user-answer card)
         correct-ans (:answer card)]
 
-    ;; Finally, score it
-    (if (= user-ans correct-ans)
+    ;; Compare cleaned versions so casing or punctuation variations don't break matches
+    (if (= (clean-label user-ans) (clean-label correct-ans))
       (do
         (println "Correct! 🎉")
         (inc num-correct))
@@ -65,10 +93,7 @@
 
 (defn game-loop [deck]
   (flush)
-    (reduce query-user 0 deck)
-
-) ;; defn game-loop
-
+  (reduce query-user 0 deck))
 
 (defn play-game []
   (println "Initializing deck...!")
