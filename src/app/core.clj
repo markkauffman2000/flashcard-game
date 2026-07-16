@@ -6,24 +6,23 @@
 ;; from how it's presented to the user.
 ;; load the deck and shuffle it.
 ;;
+
+;; Hardcoded fallback deck in case the external file is missing or broken
 (def sample-deck
-  [{:id 1 :type :tf :question "Clojure is a Lisp." :answer true}
-   {:id 2 :type :tf :question "Vectors are mutable." :answer false}
-   {:id 3 :type :tf :question "(+ 1 2) equals 3." :answer true}
+  [{:id 1 :type :tf :question "Clojure is a Lisp (Fallback Deck)." :answer true}
+   {:id 2 :type :tf :question "Vectors are mutable (Fallback Deck)." :answer false}])
 
-   {:id 4
-    :type :mc
-    :question "What is my favorite color?"
-    :options [["1" "red"] ["2" "blue"] ["3" "yellow"]]
-    :answer "1"}
 
-   {:id 5
-    :type :mc
-    :question "Which data structure is immutable in Clojure?"
-    :options [["A." "Vectors"] ["B." "Lists"] ["C." "Maps"] ["D." "All of them"]]
-    :answer "D."}
-])
-
+;;  Dynamic File Loader
+(defn load-deck-from-file [file-path]
+  (try
+    (let [file-content (slurp file-path)]
+      ;; edn/read-string parses the plain string content directly into native Clojure data structures
+      (edn/read-string file-content))
+    (catch Exception e
+      (println "\n[Warning] Could not load cards from" file-path "- using fallback deck.")
+      (println "Error detail:" (.getMessage e))
+      nil)))
 
 (defn initialize-deck [] ;; this is so we can read a file here later on..
   (let [shuffled-deck (shuffle sample-deck)]
@@ -117,4 +116,5 @@
 
   (app.core/-main)
 
+  (app.core/load-deck-from-file "cards.edn")
   )

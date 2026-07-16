@@ -1,0 +1,16 @@
+;; cards.edn
+[
+ {:id 1 :type :tf :question "Clojure is a Lisp." :answer true}
+ {:id 2 :type :tf :question "Vectors are mutable." :answer false}
+ {:id 3 :type :tf :question "(+ 1 2) equals 3." :answer true}
+ {:id 4 
+  :type :mc 
+  :question "What is my favorite color?" 
+  :options [["1" "red"] ["2" "blue"] ["3" "yellow"]] 
+  :answer "1"}
+ {:id 5 
+  :type :mc 
+  :question "Which data structure is immutable in Clojure?" 
+  :options [["A." "Vectors"] ["B." "Lists"] ["C." "Maps"] ["D." "All of them"]] 
+  :answer "D."}
+]
