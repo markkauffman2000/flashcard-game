@@ -11,6 +11,6 @@
  {:id 5 
   :type :mc 
   :question "Which data structure is immutable in Clojure?" 
-  :options [["A." "Vectors"] ["B." "Lists"] ["C." "Maps"] ["D." "All of them"] 
+  :options [["A." "Vectors"] ["B." "Lists"] ["C." "Maps"] ["D." "All of them"]] 
   :answer "D."}
 ]

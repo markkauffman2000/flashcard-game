@@ -24,9 +24,10 @@
       (println "Error detail:" (.getMessage e))
       nil)))
 
-(defn initialize-deck [] ;; this is so we can read a file here later on..
-  (let [shuffled-deck (shuffle sample-deck)]
-   shuffled-deck)
+(defn initialize-deck [] ;; load cards from file, on error use hard-coded deck.
+  (let [loaded-deck (load-deck-from-file "cards.edn")
+        final-deck (if loaded-deck loaded-deck sample-deck)]
+    (shuffle final-deck))
   )
 
 ;; CONSIDERATION 1: Dedicated function to just show the card based on its type
