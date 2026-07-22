@@ -20,8 +20,11 @@
       ;; edn/read-string parses the plain string content directly into native Clojure data structures
       (edn/read-string file-content))
     (catch Exception e
-      (println "\n[Warning] Could not load cards from" file-path "- using fallback deck.")
+      (println "\n[Warning] Could not load cards from: " file-path )
       (println "Error detail:" (.getMessage e))
+      (print "\nPress [ENTER] to continue with fallback deck.")
+      (flush)
+      (read-line) ;; pause
       nil)))
 
 (defn initialize-deck [] ;; load cards from file, on error use hard-coded deck.
